@@ -10,16 +10,17 @@ public class UIController : MonoBehaviour
 
     [SerializeField]
     private string[] _clueContent;
+    private int _clueIndex = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        _clueText.text = _clueContent[0];
+        _clueText.text = _clueContent[_clueIndex];
     }
 
-    // Update is called once per frame
-    void Update()
+    public void DisplayNextClue()
     {
-        
+        _clueIndex++;
+        _clueText.text = _clueContent[_clueIndex];
     }
 }
