@@ -24,16 +24,23 @@ public class ERController : MonoBehaviour
     private GameObject _doorSwitch;
     [SerializeField]
     private Rigidbody _cabinetRigidbody;
+    [SerializeField]
+    private AudioSource _cabinetAudioSource;
+    [SerializeField]
+    private Animator _lockerDoorAnimator;
+    [SerializeField]
+    private AudioSource _lockerDoorAudioSource;
+
     private int _lockSocketActivated;
 
     [SerializeField]
     private Animator _exitDoorAnimator;
+    [SerializeField]
+    private AudioSource _exitDoorAudioSource;
 
     [SerializeField]
     private UIController _uiController;
 
-
-    // Start is called before the first frame update
     void Start()
     {
         _pictures.SetActive(false);
@@ -81,7 +88,7 @@ public class ERController : MonoBehaviour
         }
     }
 
-    // Clue 1 - Picture sockets filled - Display door and keys
+    // Clue 1 - Picture sockets filled - Open cabinet to display skeleton key
     public void ActivatePictureSocket()
     {
         _pictureSocketsActivated++;
@@ -90,15 +97,34 @@ public class ERController : MonoBehaviour
         {
             _pictures.SetActive(false);
             _pictureSockets.SetActive(false);
-            _hiddenDoorWall.SetActive(false);
-            _exitDoorObjects.SetActive(true);
-            _chainsLocks.SetActive(true);
-            _cabinetRigidbody.isKinematic = false;
+            StartCoroutine(OpenCabinetDoor());
             _uiController.DisplayNextClue();
         }
     }
 
-    // Clue 2 - Use keys to unlock chains - Switch is hi-lited.
+    private IEnumerator OpenCabinetDoor()
+    {
+        yield return new WaitForSeconds(2);
+        _cabinetRigidbody.isKinematic = false;
+        _cabinetAudioSource.Play();
+    }
+
+
+
+    // Clue 2 - Use skeleton key to open locker to display two keys and show Exit Door
+    public void OpenLocker()
+    {
+        Debug.Log("Skeleton Key Inserted");
+        _hiddenDoorWall.SetActive(false);
+        _exitDoorObjects.SetActive(true);
+        _chainsLocks.SetActive(true);
+        _uiController.DisplayNextClue();
+        _lockerDoorAnimator.SetTrigger("OpenLockerDoor");
+        _lockerDoorAudioSource.Play();
+    }
+
+
+    // Clue 3 - Use keys to unlock chains - Switch is hi-lited.
     public void ActivateKeySocket()
     {
         _lockSocketActivated++;
@@ -110,9 +136,10 @@ public class ERController : MonoBehaviour
         }
     }
 
-    // Clue 3 - Flip green lightswitch to exit
+    // Clue 4 - Flip green lightswitch to exit
     public void OpenDoors()
     {
         _exitDoorAnimator.SetTrigger("OpenDoor");
+        _exitDoorAudioSource.Play();
     }
 }

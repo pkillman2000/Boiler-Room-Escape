@@ -12,16 +12,10 @@ public class UIController : MonoBehaviour
     private string[] _clueContent;
     private int _clueIndex = 0;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        //_clueText.text = _clueContent[_clueIndex];
-    }
 
     public void DisplayNextClue()
     {
         _clueIndex++;
-        //_clueText.text = _clueContent[_clueIndex];
     }
 
     public void DisplayText(bool display)
