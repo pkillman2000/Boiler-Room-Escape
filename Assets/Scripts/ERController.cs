@@ -1,6 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
+/*
+ * This is used to control many of the events
+ * in the escape room.
+*/
 
 public class ERController : MonoBehaviour
 {
@@ -27,6 +33,8 @@ public class ERController : MonoBehaviour
     [SerializeField]
     private AudioSource _cabinetAudioSource;
     [SerializeField]
+    private GameObject _lockerLock;
+    [SerializeField]
     private Animator _lockerDoorAnimator;
     [SerializeField]
     private AudioSource _lockerDoorAudioSource;
@@ -46,15 +54,13 @@ public class ERController : MonoBehaviour
         _pictures.SetActive(false);
         _picturesActive = false;
         _pictureSocketsActivated = 0;
-
         _pictureSockets.SetActive(false);
         _pictureSocketsActive = false;
-
+        _lockerLock.SetActive(false);
         _exitDoorObjects.SetActive(false);
         _chainsLocks.SetActive(false);
         _doorSwitch.SetActive(false);
         _lockSocketActivated = 0;
-
         _hiddenDoorWall.SetActive(true);
     }
 
@@ -107,6 +113,7 @@ public class ERController : MonoBehaviour
         yield return new WaitForSeconds(2);
         _cabinetRigidbody.isKinematic = false;
         _cabinetAudioSource.Play();
+        _lockerLock.SetActive(true);
     }
 
 
@@ -114,7 +121,6 @@ public class ERController : MonoBehaviour
     // Clue 2 - Use skeleton key to open locker to display two keys and show Exit Door
     public void OpenLocker()
     {
-        Debug.Log("Skeleton Key Inserted");
         _hiddenDoorWall.SetActive(false);
         _exitDoorObjects.SetActive(true);
         _chainsLocks.SetActive(true);
@@ -124,7 +130,7 @@ public class ERController : MonoBehaviour
     }
 
 
-    // Clue 3 - Use keys to unlock chains - Switch is hi-lited.
+    // Clue 3 - Use two keys to unlock chains - Switch is visible.
     public void ActivateKeySocket()
     {
         _lockSocketActivated++;
@@ -136,10 +142,17 @@ public class ERController : MonoBehaviour
         }
     }
 
-    // Clue 4 - Flip green lightswitch to exit
+    // Clue 4 - Flip green lightswitch to exit - Exit doors open
     public void OpenDoors()
     {
         _exitDoorAnimator.SetTrigger("OpenDoor");
         _exitDoorAudioSource.Play();
+    }
+
+    // End Clues
+
+    public void RestartScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
